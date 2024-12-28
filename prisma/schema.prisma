@@ -1,0 +1,136 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Note that some adapters may set a maximum length for the String type by default, please ensure your strings are long
+// enough when changing adapters.
+// See https://www.prisma.io/docs/orm/reference/prisma-schema-reference#string for more information
+
+// *****VERY IMPORTANT NOTE*****
+// If you update either the Brand or Store model, make sure to update the mongoose models in RepRally, otherwise syncing may fail. 
+// Also, update the scraper or things may break there too
+// - BZ
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model session {
+  session_id    String    @id @default(auto()) @map("_id") @db.ObjectId
+  id            String    @unique
+  shop          String
+  state         String
+  isOnline      Boolean   @default(false)
+  scope         String?
+  expires       DateTime?
+  accessToken   String
+  userId        BigInt?
+  firstName     String?
+  lastName      String?
+  email         String?
+  accountOwner  Boolean   @default(false)
+  locale        String?
+  collaborator  Boolean?  @default(false)
+  emailVerified Boolean?  @default(false)
+
+  @@map("sessions")
+}
+
+model Store {
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  name             String
+  addressPrimary   String   @map("address_primary")
+  addressSecondary String?  @map("address_secondary")
+  city             String
+  state            String
+  postalCode       String   @map("postal_code")
+  country          String   @default("US")
+  phone            String?
+  email            String?
+  website          String?
+  smartyKey        String   @unique @map("smarty_key")
+  placeId          String?  @map("place_id")
+  geohash          String
+  brands           String[]
+  tags             Json     @default("{}")
+  source           String[]
+  createdAt        String   @map("created_at")
+  updatedAt        String   @map("updated_at")
+  isChain          Boolean? @map("is_chain")
+  storeType        String?  @map("store_type")
+  overrides        Json?
+
+  @@map("stores")
+}
+
+model Brand {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  name           String
+  website        String
+  email          String?
+  shopifyStore   String?  @map("shopify_store")
+  shopifySession String?  @map("shopify_session")
+  brandHash      String   @unique @map("brand_hash")
+  settings       Json     @default("{}")
+  isInstalled    Boolean  @default(false) @map("is_installed")
+  locatorType    String?  @map("locator_type")
+  locatorLink    String?  @map("locator_link")
+  locatorApi     String?  @map("locator_api")
+  tags           String[] @default([])
+  createdAt      String   @map("created_at")
+  updatedAt      String   @map("updated_at")
+
+  @@map("brands")
+}
+
+model Tree {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  brandHash String @unique @map("brand_hash")
+  tree      Json
+
+  @@map("trees")
+}
+
+model GoogleMapsKey {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  key       String   @unique @map("maps_key")
+  endpoints String[]
+  isUsed    Boolean? @map("is_used")
+
+  @@map("google_map_keys")
+}
+
+model Inquiry {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  email       String
+  messageType String   @map("message_type")
+  message     String
+  brandHash   String   @map("brand_hash")
+  createdAt   DateTime @default(now()) @map("created_at")
+  isResolved  Boolean  @default(false) @map("is_resolved")
+
+  @@map("inquiries")
+}
+
+model SearchRecord {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  brandHash String @map("brand_hash")
+  geohash   String
+  searches  Json[]
+  city      String
+  state     String
+
+  @@map("searches")
+}
+
+model SyncRecord {
+  id                String @id @default(auto()) @map("_id") @db.ObjectId
+  brandHash         String @unique @map("brand_hash")
+  seenOrderProducts Int[]  @default([]) @map("seen_order_products")
+
+  @@map("sync_records")
+}

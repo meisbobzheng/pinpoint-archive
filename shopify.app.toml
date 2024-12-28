@@ -1,0 +1,45 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+client_id = "2dc35cbe64f85e9109dcea7399ace478"
+name = "PinPoint"
+handle = "pinpoint-5"
+application_url = "https://prod-pinpoint-fa106860e01c.herokuapp.com"
+embedded = true
+
+[build]
+automatically_update_urls_on_dev = true
+dev_store_url = "reprally-dev.myshopify.com"
+include_config_on_deploy = true
+
+[access_scopes]
+# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
+scopes = "write_content,write_products"
+
+[auth]
+redirect_urls = [
+  "https://prod-pinpoint-fa106860e01c.herokuapp.com/auth/callback",
+  "https://prod-pinpoint-fa106860e01c.herokuapp.com/auth/shopify/callback",
+  "https://prod-pinpoint-fa106860e01c.herokuapp.com/api/auth/callback"
+]
+
+[webhooks]
+api_version = "2024-10"
+
+  [[webhooks.subscriptions]]
+  topics = [ "app/uninstalled" ]
+  uri = "/webhooks/app/uninstalled"
+
+  [[webhooks.subscriptions]]
+  compliance_topics = [ "customers/data_request" ]
+  uri = "/webhooks/app/cdrequest"
+
+  [[webhooks.subscriptions]]
+  compliance_topics = [ "customers/redact" ]
+  uri = "/webhooks/app/cderasure"
+
+  [[webhooks.subscriptions]]
+  compliance_topics = [ "shop/redact" ]
+  uri = "/webhooks/app/sderasure"
+
+[pos]
+embedded = false
