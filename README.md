@@ -2,6 +2,8 @@
 
 The greatest ~free store locator~ store locator <ins>ever</ins>.
 
+Demo video: https://www.youtube.com/watch?v=DRN1Lv2_F2s
+
 Please read through shopify documentation so you know what you're doing.
 
 - https://shopify.dev/docs/api/shopify-cli
