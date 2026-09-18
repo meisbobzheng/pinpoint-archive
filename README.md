@@ -1,5 +1,7 @@
 # PinPoint
 
+THIS IS NOT VIBECODED SLOP. THIS WAS HAND WRITTEN PRE-AI. 
+
 The greatest ~free store locator~ store locator <ins>ever</ins>.
 
 Demo video: https://www.youtube.com/watch?v=DRN1Lv2_F2s
